@@ -1,33 +1,22 @@
-    function Window:CreateTab(name, icon)
-        local Tab = {}
-        Tab.Sections = {}
+function Window:CreateTab(name, icon)
+    local Tab = {}
+    Tab.Sections = {}
 
-        local Button = Create("TextButton", {
-            Text = name,
-            BackgroundTransparency = 1,
-            TextColor3 = VentoUI.Theme.Text,
-            Parent = Main
-        })
+    -- Container da Tab
+    local TabFrame = Create("ScrollingFrame", {
+        Parent = Main,
+        Size = UDim2.new(1, -20, 1, -20),
+        Position = UDim2.new(0, 10, 0, 10),
+        CanvasSize = UDim2.new(0, 0, 0, 0),
+        ScrollBarImageTransparency = 1,
+        Visible = false
+    })
 
-        function Tab:CreateSection(title)
-            local Section = {}
+    local Layout = Create("UIListLayout", {
+        Parent = TabFrame,
+        Padding = UDim.new(0, 12)
+    })
 
-            local Frame = Create("Frame", {
-                BackgroundColor3 = VentoUI.Theme.Secondary,
-                Size = UDim2.new(1, -20, 0, 40),
-                Parent = Main
-            })
-
-            Create("UICorner", { CornerRadius = UDim.new(0, 10), Parent = Frame })
-
-            function Section:CreateButton(text, callback)
-                local Btn = Create("TextButton", {
-                    Text = text,
-                    Parent = Frame,
-                    BackgroundColor3 = VentoUI.Theme.Accent
-                })
-
-                Btn.MouseButton1Click:Connect(function()
-                    pcall(callback)
-                end)
-            end
+    Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        TabFrame.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y + 10)
+    end)
